@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { GraduationCap, Mail, Lock, User } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
@@ -10,14 +10,14 @@ const Register = () => {
     password: '',
     confirmPassword: '',
   });
-  const [errors, setErrors] = useState({});
+  const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   const validateForm = () => {
-    let newErrors = {};
+      const newErrors: { confirmPassword?: string } = {};
     if (formData.password !== formData.confirmPassword) {
       newErrors.confirmPassword = 'Les mots de passe ne correspondent pas';
     }
@@ -51,7 +51,7 @@ const Register = () => {
                 type="text"
                 name={field}
                 placeholder={field === 'lastName' ? 'Nom' : 'Prénom'}
-                value={formData[field]}
+                value={formData[field as keyof typeof formData]}
                 onChange={handleChange}
                 className="w-full pl-10 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 required
@@ -79,7 +79,7 @@ const Register = () => {
                 type="password"
                 name={field}
                 placeholder={field === 'password' ? 'Mot de passe' : 'Confirmer le mot de passe'}
-                value={formData[field]}
+                value={formData[field as keyof typeof formData]}
                 onChange={handleChange}
                 className="w-full pl-10 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 required

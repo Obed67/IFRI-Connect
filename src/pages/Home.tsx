@@ -1,4 +1,4 @@
-import { ArrowRight, Briefcase, Users, Award, Mail, ArrowUpRight } from 'lucide-react';
+import { Briefcase, Users, Award, Mail, ArrowUpRight } from 'lucide-react';
 
 const Home = () => {
   const statistics = [
