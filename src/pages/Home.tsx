@@ -10,17 +10,17 @@ const Home = () => {
 
   const features = [
     {
-      icon: <Users className="h-8 w-8 text-blue-600" />,
+      icon: <Users className="h-8 w-8 text-blue-600" />, 
       title: "Networking étudiant",
       description: "Échangez avec vos pairs et développez votre réseau professionnel"
     },
     {
-      icon: <Award className="h-8 w-8 text-blue-600" />,
+      icon: <Award className="h-8 w-8 text-blue-600" />, 
       title: "Portfolio digital",
       description: "Mettez en valeur vos compétences et certifications"
     },
     {
-      icon: <Briefcase className="h-8 w-8 text-blue-600" />,
+      icon: <Briefcase className="h-8 w-8 text-blue-600" />, 
       title: "Opportunités ciblées",
       description: "Accédez aux meilleures offres du secteur IT"
     }
@@ -29,125 +29,63 @@ const Home = () => {
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
       {/* Hero Section */}
-      <div className="max-w-7xl mx-auto px-6 pt-16 pb-24">
-        <div className="text-center mb-16">
-          <h1 className="text-6xl font-extrabold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-blue-800">
-            Bienvenue sur IFRI Connect
-          </h1>
-          <p className="text-2xl text-gray-600 max-w-2xl mx-auto mb-8">
-            La plateforme qui propulse votre carrière dans le numérique
-          </p>
-          <div className="flex justify-center gap-4">
-            <button className="bg-blue-600 text-white px-8 py-4 rounded-xl font-semibold hover:bg-blue-700 transform hover:scale-105 transition">
-              Créer mon profil
-            </button>
-            <button className="bg-white text-blue-600 px-8 py-4 rounded-xl font-semibold border-2 border-blue-600 hover:bg-blue-50 transform hover:scale-105 transition">
-              Explorer les opportunités
-            </button>
+      <div className="max-w-7xl mx-auto px-6 pt-16 pb-24 text-center">
+        <h1 className="text-6xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-blue-800">
+          Bienvenue sur IFRI Connect
+        </h1>
+        <p className="text-2xl text-gray-600 max-w-2xl mx-auto mb-8">
+          La plateforme qui propulse votre carrière dans le numérique
+        </p>
+        <div className="flex justify-center gap-4">
+          <button className="bg-blue-600 text-white px-8 py-4 rounded-xl font-semibold hover:bg-blue-700 transform hover:scale-105 transition">
+            Créer mon profil
+          </button>
+          <button className="bg-white text-blue-600 px-8 py-4 rounded-xl font-semibold border-2 border-blue-600 hover:bg-blue-50 transform hover:scale-105 transition">
+            Explorer les opportunités
+          </button>
+        </div>
+      </div>
+      
+      {/* Statistics */}
+      <div className="grid grid-cols-4 gap-8 max-w-7xl mx-auto mb-24">
+        {statistics.map((stat, index) => (
+          <div key={index} className="bg-white p-6 rounded-2xl shadow-xl text-center transform hover:scale-105 transition">
+            <div className="text-4xl font-bold text-blue-600 mb-2">{stat.number}</div>
+            <div className="text-gray-600">{stat.label}</div>
           </div>
-        </div>
-
-        {/* Statistics */}
-        <div className="grid grid-cols-4 gap-8 mb-24">
-          {statistics.map((stat, index) => (
-            <div key={index} className="bg-white p-6 rounded-2xl shadow-xl text-center transform hover:scale-105 transition">
-              <div className="text-4xl font-bold text-blue-600 mb-2">{stat.number}</div>
-              <div className="text-gray-600">{stat.label}</div>
-            </div>
-          ))}
-        </div>
-
-        {/* Main Features */}
-        <div className="grid md:grid-cols-3 gap-8 mb-24">
-          {features.map((feature, index) => (
-            <div key={index} className="bg-white p-8 rounded-2xl shadow-xl hover:shadow-2xl transition">
-              <div className="mb-4">{feature.icon}</div>
-              <h3 className="text-xl font-bold mb-2">{feature.title}</h3>
-              <p className="text-gray-600 mb-4">{feature.description}</p>
-              <button className="text-blue-600 font-semibold flex items-center group">
-                En savoir plus
-                <ArrowUpRight className="ml-2 group-hover:translate-x-1 group-hover:-translate-y-1 transition" />
-              </button>
-            </div>
-          ))}
-        </div>
-
-        {/* Pour les étudiants et Opportunités */}
-        <div className="grid md:grid-cols-2 gap-10 mb-24">
-          <div className="bg-gradient-to-br from-blue-500 to-blue-700 rounded-2xl shadow-xl p-8 text-white transform hover:scale-105 transition">
-            <h2 className="text-2xl font-bold mb-6">Pour les Étudiants</h2>
-            <ul className="space-y-4">
-              <li className="flex items-start">
-                <ArrowRight className="h-5 w-5 mr-2 mt-1" />
-                <span>Créez votre profil professionnel et maximisez votre visibilité</span>
-              </li>
-              <li className="flex items-start">
-                <ArrowRight className="h-5 w-5 mr-2 mt-1" />
-                <span>Ajoutez vos compétences, projets et certifications</span>
-              </li>
-              <li className="flex items-start">
-                <ArrowRight className="h-5 w-5 mr-2 mt-1" />
-                <span>Connectez-vous avec d'autres étudiants de l'IFRI</span>
-              </li>
-            </ul>
-          </div>
-          <div className="bg-gray-900 rounded-2xl shadow-xl p-8 text-white transform hover:scale-105 transition">
-            <h2 className="text-2xl font-bold mb-6">Opportunités</h2>
-            <ul className="space-y-4">
-              <li className="flex items-start">
-                <ArrowRight className="h-5 w-5 mr-2 mt-1" />
-                <span>Découvrez les meilleures entreprises IT du Bénin</span>
-              </li>
-              <li className="flex items-start">
-                <ArrowRight className="h-5 w-5 mr-2 mt-1" />
-                <span>Accédez aux offres de stages et d'emplois exclusives</span>
-              </li>
-              <li className="flex items-start">
-                <ArrowRight className="h-5 w-5 mr-2 mt-1" />
-                <span>Recevez des alertes personnalisées pour les nouvelles opportunités</span>
-              </li>
-            </ul>
-          </div>
-        </div>
-
-        {/* Call to Action */}
-        <div className="text-center bg-blue-50 rounded-2xl p-12 mb-24">
-          <h2 className="text-3xl font-bold mb-6">Prêt à lancer votre carrière ?</h2>
-          <p className="text-xl text-gray-600 mb-8">
-            Rejoignez la communauté IFRI Connect et accédez aux meilleures opportunités du secteur IT
-          </p>
-          <div className="flex justify-center items-center gap-6">
-            <button className="bg-blue-600 text-white px-8 py-4 rounded-xl font-semibold hover:bg-blue-700 transform hover:scale-105 transition flex items-center">
-              <Mail className="mr-2" />
-              Créer un compte
-            </button>
+        ))}
+      </div>
+      
+      {/* Features */}
+      <div className="grid md:grid-cols-3 gap-8 max-w-7xl mx-auto mb-24">
+        {features.map((feature, index) => (
+          <div key={index} className="bg-white p-8 rounded-2xl shadow-xl hover:shadow-2xl transition">
+            <div className="mb-4">{feature.icon}</div>
+            <h3 className="text-xl font-bold mb-2">{feature.title}</h3>
+            <p className="text-gray-600 mb-4">{feature.description}</p>
             <button className="text-blue-600 font-semibold flex items-center group">
               En savoir plus
               <ArrowUpRight className="ml-2 group-hover:translate-x-1 group-hover:-translate-y-1 transition" />
             </button>
           </div>
-        </div>
-
-        {/* Testimonials Section */}
-        <div className="grid md:grid-cols-3 gap-8">
-          {[1, 2, 3].map((_, index) => (
-            <div key={index} className="bg-white p-6 rounded-2xl shadow-xl">
-              <div className="flex items-center mb-4">
-                <img
-                  src={`/api/placeholder/48/48`}
-                  alt="Profile"
-                  className="rounded-full mr-4"
-                />
-                <div>
-                  <h3 className="font-semibold">Étudiant {index + 1}</h3>
-                  <p className="text-gray-600 text-sm">Promo 2024</p>
-                </div>
-              </div>
-              <p className="text-gray-600">
-                "IFRI Connect m'a permis de trouver un stage passionnant dans une entreprise innovante. La plateforme est vraiment intuitive et efficace."
-              </p>
-            </div>
-          ))}
+        ))}
+      </div>
+      
+      {/* Call to Action */}
+      <div className="text-center bg-blue-50 rounded-2xl p-12 max-w-7xl mx-auto mb-24">
+        <h2 className="text-3xl font-bold mb-6">Prêt à lancer votre carrière ?</h2>
+        <p className="text-xl text-gray-600 mb-8">
+          Rejoignez la communauté IFRI Connect et accédez aux meilleures opportunités du secteur IT
+        </p>
+        <div className="flex justify-center gap-6">
+          <button className="bg-blue-600 text-white px-8 py-4 rounded-xl font-semibold hover:bg-blue-700 transform hover:scale-105 transition flex items-center">
+            <Mail className="mr-2" />
+            Créer un compte
+          </button>
+          <button className="text-blue-600 font-semibold flex items-center group">
+            En savoir plus
+            <ArrowUpRight className="ml-2 group-hover:translate-x-1 group-hover:-translate-y-1 transition" />
+          </button>
         </div>
       </div>
     </div>

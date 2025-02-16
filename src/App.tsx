@@ -7,7 +7,8 @@ import Profile from "./pages/Profile";
 import Companies from "./pages/Companies";
 import Jobs from "./pages/Jobs";
 import Messages from "./pages/Messages";
-import Login from "./pages/Login";
+import Login from "./pages/connexion/Login";
+import Register from "./pages/connexion/Register";
 
 function App() {
      return (
@@ -25,6 +26,7 @@ function App() {
                               <Route path="/jobs" element={<Jobs />} />
                               <Route path="/messages" element={<Messages />} />
                               <Route path="/login" element={<Login />} />
+                              <Route path="/register" element={<Register />} />
                          </Routes>
                     </main>
                     <Footer />
