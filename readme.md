@@ -48,4 +48,4 @@ Les contributions sont les bienvenues ! Veuillez suivre les étapes suivantes po
 Ce projet a été créé par [ObeDev]. Vous pouvez me contacter via :
 - LinkedIn : [sonagnon obed AGBOHOUN](https://www.linkedin.com/in/obedev/)
 - GitHub : [Obed67](https://github.com/Obed67/votre-utilisateur)
-- Email : [obedagbohouns@gmail.com]
+- Email : obedagbohouns@gmail.com
