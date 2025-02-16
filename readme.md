@@ -43,6 +43,9 @@ Les contributions sont les bienvenues ! Veuillez suivre les étapes suivantes po
 4. Poussez votre branche ([git push origin feature/ma-fonctionnalité](http://_vscodecontentref_/21)).
 5. Ouvrez une Pull Request.
 
-## Licence
+## Auteur
 
-Ce projet est sous licence MIT. Voir le fichier LICENSE pour plus de détails.
+Ce projet a été créé par [ObeDev]. Vous pouvez me contacter via :
+- LinkedIn : [sonagnon obed AGBOHOUN](https://www.linkedin.com/in/obedev/)
+- GitHub : [Obed67](https://github.com/Obed67/votre-utilisateur)
+- Email : [obedagbohouns@gmail.com]
