@@ -1,5 +1,7 @@
-
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import Home from "./pages/Home";
@@ -19,10 +21,7 @@ function App() {
                          <Routes>
                               <Route path="/" element={<Home />} />
                               <Route path="/profile" element={<Profile />} />
-                              <Route
-                                   path="/companies"
-                                   element={<Companies />}
-                              />
+                              <Route path="/companies" element={<Companies />} />
                               <Route path="/jobs" element={<Jobs />} />
                               <Route path="/messages" element={<Messages />} />
                               <Route path="/login" element={<Login />} />
@@ -31,6 +30,7 @@ function App() {
                     </main>
                     <Footer />
                </div>
+               <ToastContainer position="top-right" autoClose={3000} />
           </Router>
      );
 }
