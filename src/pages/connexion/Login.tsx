@@ -41,8 +41,8 @@ const Login = () => {
     if (error) {
       toast.error(`❌ ${error.message}`, { position: 'top-right', autoClose: 3000 });
     } else {
-      toast.success('🎉 Connexion réussie !', { position: 'top-right', autoClose: 3000 });
-      setTimeout(() => navigate('/jobs'), 2000);
+      toast.success('🎉 Connexion réussie !', { position: 'top-right', autoClose: 1000 });
+      setTimeout(() => navigate('/jobs'), 500);
     }
   };
 
