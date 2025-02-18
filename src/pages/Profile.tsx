@@ -1,4 +1,3 @@
-import React from 'react';
 import { Book, Award, Briefcase, GraduationCap } from 'lucide-react';
 
 const Profile = () => {
