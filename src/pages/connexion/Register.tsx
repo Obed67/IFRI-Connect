@@ -3,6 +3,8 @@ import { GraduationCap, Mail, Lock, User } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import supabase from '../../supabase'; // Import Supabase
+import React from 'react';
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -12,8 +14,9 @@ const Register = () => {
     password: '',
     confirmPassword: '',
   });
+
   const [errors, setErrors] = useState({});
-  const navigate = useNavigate(); // Pour rediriger après inscription
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -36,48 +39,37 @@ const Register = () => {
       newErrors.confirmPassword = 'Les mots de passe ne correspondent pas';
     }
 
-    // Vérifie si l'email est déjà utilisé
-    const existingUsers = JSON.parse(localStorage.getItem('users')) || [];
-    if (existingUsers.some(user => user.email === formData.email)) {
-      newErrors.email = 'Cet email est déjà utilisé';
-    }
-
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (validateForm()) {
-      const newUser = {
-        firstName: formData.firstName,
-        lastName: formData.lastName,
+    if (!validateForm()) return;
+
+    try {
+      const { data, error } = await supabase.auth.signUp({
         email: formData.email,
         password: formData.password,
-      };
-
-      const existingUsers = JSON.parse(localStorage.getItem('users')) || [];
-      existingUsers.push(newUser);
-      localStorage.setItem('users', JSON.stringify(existingUsers));
-
-      console.log('Utilisateur enregistré avec succès:', newUser);
-      console.log('Tous les utilisateurs:', existingUsers);
-
-      toast.success('🎉 Inscription réussie ! Redirection vers la page de connexion...', {
-        position: 'top-right',
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
+        options: {
+          data: {
+            firstName: formData.firstName,
+            lastName: formData.lastName,
+          },
+        },
       });
 
-      // Redirige vers la page de connexion après 3 secondes
-      setTimeout(() => {
-        navigate('/login');
-      }, 3000);
+      console.log("Réponse de Supabase :", data);
 
-      setFormData({ firstName: '', lastName: '', email: '', password: '', confirmPassword: '' });
+      if (error) {
+        toast.error(`❌ ${error.message}`, { position: 'top-right', autoClose: 3000 });
+      } else {
+        toast.success('🎉 Inscription réussie ! Vérifiez votre email.', { position: 'top-right', autoClose: 3000 });
+        setTimeout(() => navigate('/login'), 3000);
+      }
+    } catch (err) {
+      console.error("Erreur inattendue :", err);
+      toast.error(`❌ Erreur : ${err.message}`, { position: 'top-right', autoClose: 3000 });
     }
   };
 

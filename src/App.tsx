@@ -46,6 +46,7 @@ import Jobs from "./pages/Jobs";
 import Messages from "./pages/Messages";
 import Login from "./pages/connexion/Login";
 import Register from "./pages/connexion/Register";
+import React from "react";
 
 function App() {
   return (
