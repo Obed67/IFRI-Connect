@@ -76,6 +76,8 @@ const scrapeLinkedInJobs = async () => {
 };
 
 async function saveJobsToSupabase(jobs) {
+  console.log("🔑 Utilisateur actuel :", supabase.auth.getUser());
+
   try {
     const { data: user, error: authError } = await supabase.auth.getUser();
 
@@ -85,6 +87,9 @@ async function saveJobsToSupabase(jobs) {
     }
 
     console.log("✅ Utilisateur authentifié :", user.user);
+    const { data: session } = await supabase.auth.getSession();
+console.log("🔍 Session en cours :", session);
+
 
     // Ajout de user_id dans chaque job
     const jobRecords = jobs.map((job) => ({
