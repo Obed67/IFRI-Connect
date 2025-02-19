@@ -1,106 +1,13 @@
-// import { Book, Award, Briefcase, GraduationCap } from 'lucide-react';
-
-// const Profile = () => {
-//   return (
-//     <div className="max-w-4xl mx-auto">
-//       <div className="bg-white rounded-xl shadow-lg overflow-hidden">
-//         <div className="bg-blue-600 h-32"></div>
-//         <div className="px-8 pb-8">
-//           <div className="relative">
-//             <img
-//               src="https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=256&h=256&q=80"
-//               alt="Photo de profil"
-//               className="w-32 h-32 rounded-full border-4 border-white absolute -top-16"
-//             />
-//           </div>
-          
-//           <div className="mt-20">
-//             <h1 className="text-3xl font-bold text-gray-900">John Doe</h1>
-//             <p className="text-gray-600">Étudiant en 3ème année • Génie Logiciel</p>
-//           </div>
-
-//           <div className="grid md:grid-cols-2 gap-8 mt-8">
-//             <div className="space-y-6">
-//               <div>
-//                 <h2 className="text-xl font-semibold text-gray-900 flex items-center gap-2 mb-4">
-//                   <Book className="h-5 w-5 text-blue-600" />
-//                   Compétences
-//                 </h2>
-//                 <div className="flex flex-wrap gap-2">
-//                   {['React', 'TypeScript', 'Node.js', 'Python', 'Java', 'SQL'].map((skill) => (
-//                     <span key={skill} className="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm">
-//                       {skill}
-//                     </span>
-//                   ))}
-//                 </div>
-//               </div>
-
-//               <div>
-//                 <h2 className="text-xl font-semibold text-gray-900 flex items-center gap-2 mb-4">
-//                   <Award className="h-5 w-5 text-blue-600" />
-//                   Certifications
-//                 </h2>
-//                 <ul className="space-y-3">
-//                   <li className="flex items-center gap-4">
-//                     <img src="https://images.unsplash.com/photo-1635350736475-c8cef4b21906?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=64&h=64&q=80" 
-//                          alt="AWS" 
-//                          className="w-12 h-12 rounded-lg" />
-//                     <div>
-//                       <h3 className="font-medium text-gray-900">AWS Cloud Practitioner</h3>
-//                       <p className="text-sm text-gray-600">Obtenu en Mars 2024</p>
-//                     </div>
-//                   </li>
-//                 </ul>
-//               </div>
-//             </div>
-
-//             <div className="space-y-6">
-//               <div>
-//                 <h2 className="text-xl font-semibold text-gray-900 flex items-center gap-2 mb-4">
-//                   <Briefcase className="h-5 w-5 text-blue-600" />
-//                   Expériences
-//                 </h2>
-//                 <div className="space-y-4">
-//                   <div className="border-l-2 border-blue-600 pl-4">
-//                     <h3 className="font-medium text-gray-900">Stage - Développeur Full Stack</h3>
-//                     <p className="text-sm text-gray-600">TechCorp • Juin - Août 2023</p>
-//                     <p className="text-sm text-gray-600 mt-2">
-//                       Développement d'une application web de gestion de projet
-//                     </p>
-//                   </div>
-//                 </div>
-//               </div>
-
-//               <div>
-//                 <h2 className="text-xl font-semibold text-gray-900 flex items-center gap-2 mb-4">
-//                   <GraduationCap className="h-5 w-5 text-blue-600" />
-//                   Formation
-//                 </h2>
-//                 <div className="space-y-4">
-//                   <div className="border-l-2 border-blue-600 pl-4">
-//                     <h3 className="font-medium text-gray-900">Licence en Génie Logiciel</h3>
-//                     <p className="text-sm text-gray-600">IFRI • 2021 - Présent</p>
-//                     <p className="text-sm text-gray-600 mt-2">
-//                       Spécialisation en développement web et mobile
-//                     </p>
-//                   </div>
-//                 </div>
-//               </div>
-//             </div>
-//           </div>
-//         </div>
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default Profile;
-
 import React, { useEffect, useState } from "react";
 import supabase from "../helper/supabaseClient";
+import { UserCircle, Mail, Phone, Award, Briefcase, BookOpen, Share2, Plus, Building } from "lucide-react";
 
 const Profile = () => {
   const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [experiences, setExperiences] = useState([]);
+  const [certificates, setCertificates] = useState([]);
+  const [projects, setProjects] = useState([]);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -110,31 +17,163 @@ const Profile = () => {
         return;
       }
       setUser(data?.user);
+      setLoading(false);
     };
-
     fetchUser();
   }, []);
 
+  const profileStats = [
+    { icon: <Briefcase />, label: "Expériences", value: experiences.length || "0" },
+    { icon: <Award />, label: "Certificats", value: certificates.length || "0" },
+    { icon: <BookOpen />, label: "Projets", value: projects.length || "0" },
+  ];
+
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-6">
-      <div className="bg-white shadow-lg rounded-lg p-6 w-full max-w-md text-center">
-        {user ? (
-          <>
-            <h1 className="text-2xl font-semibold text-gray-700">
-              👋 Bienvenue, {user.user_metadata?.firstName || "Prénom"} {user.user_metadata?.lastName || "Nom"} !
-            </h1>
-            <p className="text-gray-600 mt-2">Email: <span className="font-medium">{user.email}</span></p>
-            <p className="text-gray-600">ID Utilisateur: <span className="font-medium">{user.id}</span></p>
-            <p className="text-gray-600">Créé le: <span className="font-medium">{new Date(user.created_at).toLocaleDateString()}</span></p>
+    <div className="min-h-screen bg-[#f5f9ff]">
+      <div className="pt-24 px-6">
+        <div className="max-w-7xl mx-auto">
+          {loading ? (
+            <p className="text-center text-gray-600">Chargement du profil...</p>
+          ) : user ? (
+            <>
+              {/* Profile Header Card */}
+              <div className="bg-white rounded-xl shadow-md p-6 mb-8">
+                <div className="flex items-start justify-between">
+                  <div className="flex items-center space-x-4">
+                    <div className="w-20 h-20 bg-[#007aed]/10 rounded-full flex items-center justify-center">
+                      <UserCircle className="h-12 w-12 text-[#007aed]" />
+                    </div>
+                    <div>
+                      <h1 className="text-2xl font-bold text-gray-800">
+                        {user.user_metadata?.firstName || "Prénom"} {user.user_metadata?.lastName || "Nom"}
+                      </h1>
+                      <div className="flex items-center space-x-2 text-gray-600 mt-1">
+                        <Mail className="h-4 w-4" />
+                        <span>{user.email}</span>
+                      </div>
+                      {user.user_metadata?.phone && (
+                        <div className="flex items-center space-x-2 text-gray-600 mt-1">
+                          <Phone className="h-4 w-4" />
+                          <span>{user.user_metadata.phone}</span>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                  <button className="bg-[#007aed] text-white px-4 py-2 rounded-lg hover:bg-[#0079ed] transition-colors flex items-center">
+                    <Share2 className="h-4 w-4 mr-2" />
+                    Partager le profil
+                  </button>
+                </div>
+              </div>
 
-            {/* Autres métadonnées si disponibles */}
-            {user.user_metadata?.phone && <p className="text-gray-600">Téléphone: <span className="font-medium">{user.user_metadata.phone}</span></p>}
-            {user.user_metadata?.role && <p className="text-gray-600">Rôle: <span className="font-medium">{user.user_metadata.role}</span></p>}
+              {/* Stats Grid */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                {profileStats.map((stat, index) => (
+                  <div key={index} className="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow">
+                    <div className="flex items-center justify-between mb-4">
+                      <div className="p-3 bg-[#007aed]/10 rounded-lg">
+                        {React.cloneElement(stat.icon, { className: "h-6 w-6 text-[#007aed]" })}
+                      </div>
+                    </div>
+                    <h3 className="text-2xl font-bold text-gray-800">{stat.value}</h3>
+                    <p className="text-gray-600">{stat.label}</p>
+                  </div>
+                ))}
+              </div>
 
-          </>
-        ) : (
-          <h1 className="text-2xl font-bold text-red-500">Utilisateur non trouvé</h1>
-        )}
+              {/* Main Content */}
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                {/* Experiences and Projects Column */}
+                <div className="lg:col-span-2 space-y-8">
+                  {/* Experiences Section */}
+                  <div className="bg-white rounded-xl shadow-md p-6">
+                    <div className="flex justify-between items-center mb-6">
+                      <h2 className="text-xl font-bold text-gray-800">Expériences professionnelles</h2>
+                      <button className="bg-[#ff7f04] text-white px-4 py-2 rounded-lg hover:bg-[#ff7f04]/90 transition-colors flex items-center">
+                        <Plus className="h-4 w-4 mr-2" />
+                        Ajouter
+                      </button>
+                    </div>
+                    {experiences.length === 0 ? (
+                      <div className="text-center py-8 border-2 border-dashed border-gray-200 rounded-lg">
+                        <Building className="h-12 w-12 text-gray-400 mx-auto mb-2" />
+                        <p className="text-gray-500">Aucune expérience ajoutée</p>
+                        <p className="text-gray-400 text-sm">Commencez à construire votre parcours professionnel</p>
+                      </div>
+                    ) : (
+                      <div className="space-y-4">
+                        {/* Liste des expériences ici */}
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Projects Section */}
+                  <div className="bg-white rounded-xl shadow-md p-6">
+                    <div className="flex justify-between items-center mb-6">
+                      <h2 className="text-xl font-bold text-gray-800">Projets réalisés</h2>
+                      <button className="bg-[#ff7f04] text-white px-4 py-2 rounded-lg hover:bg-[#ff7f04]/90 transition-colors flex items-center">
+                        <Plus className="h-4 w-4 mr-2" />
+                        Ajouter
+                      </button>
+                    </div>
+                    {projects.length === 0 ? (
+                      <div className="text-center py-8 border-2 border-dashed border-gray-200 rounded-lg">
+                        <BookOpen className="h-12 w-12 text-gray-400 mx-auto mb-2" />
+                        <p className="text-gray-500">Aucun projet ajouté</p>
+                        <p className="text-gray-400 text-sm">Montrez vos réalisations</p>
+                      </div>
+                    ) : (
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {/* Liste des projets ici */}
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {/* Sidebar */}
+                <div className="space-y-8">
+                  {/* Certificates Section */}
+                  <div className="bg-white rounded-xl shadow-md p-6">
+                    <div className="flex justify-between items-center mb-6">
+                      <h2 className="text-xl font-bold text-gray-800">Certificats</h2>
+                      <button className="bg-[#ff7f04] text-white px-4 py-2 rounded-lg hover:bg-[#ff7f04]/90 transition-colors flex items-center">
+                        <Plus className="h-4 w-4 mr-2" />
+                        Ajouter
+                      </button>
+                    </div>
+                    {certificates.length === 0 ? (
+                      <div className="text-center py-8 border-2 border-dashed border-gray-200 rounded-lg">
+                        <Award className="h-12 w-12 text-gray-400 mx-auto mb-2" />
+                        <p className="text-gray-500">Aucun certificat ajouté</p>
+                        <p className="text-gray-400 text-sm">Mettez en valeur vos formations</p>
+                      </div>
+                    ) : (
+                      <div className="space-y-4">
+                        {/* Liste des certificats ici */}
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Skills Section */}
+                  <div className="bg-white rounded-xl shadow-md p-6">
+                    <h2 className="text-xl font-bold text-gray-800 mb-6">Compétences</h2>
+                    <div className="flex flex-wrap gap-2">
+                      {['React', 'Node.js', 'Python', 'JavaScript', 'HTML/CSS'].map((skill, index) => (
+                        <span key={index} className="bg-[#007aed]/10 text-[#007aed] px-3 py-1 rounded-full text-sm">
+                          {skill}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </>
+          ) : (
+            <div className="bg-white rounded-xl shadow-md p-8 text-center">
+              <p className="text-gray-500">Utilisateur non trouvé</p>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
