@@ -1,4 +1,6 @@
 import { Briefcase, Users, Award, Mail, ArrowUpRight } from 'lucide-react';
+import React from 'react';
+import { Link } from 'react-router-dom';
 
 const Home = () => {
   const statistics = [
@@ -29,6 +31,9 @@ const Home = () => {
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
       {/* Hero Section */}
+      {/* <Link to="/register">Register</Link>
+      <br></br>
+      <Link to="/login">Login</Link> */}
       <div className="max-w-7xl mx-auto px-6 pt-16 pb-24 text-center">
         <h1 className="text-6xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-blue-800">
           Bienvenue sur IFRI Connect

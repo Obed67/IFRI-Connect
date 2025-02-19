@@ -3,7 +3,8 @@ import { Lock, Mail, GraduationCap } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import supabase from '../../supabase'; // Import Supabase
+// import supabase from '../../supabase'; // Import Supabase
+import supabase from "../../helper/supabaseClient";
 import React from 'react';
 
 const Login = () => {
@@ -42,7 +43,7 @@ const Login = () => {
       toast.error(`❌ ${error.message}`, { position: 'top-right', autoClose: 3000 });
     } else {
       toast.success('🎉 Connexion réussie !', { position: 'top-right', autoClose: 1000 });
-      setTimeout(() => navigate('/jobs'), 500);
+      setTimeout(() => navigate('/dashboard'), 500);
     }
   };
 

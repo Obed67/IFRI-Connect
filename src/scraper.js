@@ -1,95 +1,139 @@
 import { chromium } from "playwright";
-import supabase from "./supabase.js";
+import supabase from "./helper/supabaseClient.js";
+
+const getSupabaseTokenFromStorage = async () => {
+  try {
+    console.log("🔑 Tentative de récupération du token depuis Supabase Storage...");
+    const { data, error } = await supabase.storage.from("tokens").download("userToken.json");
+
+    if (error) {
+      console.error("❌ Erreur lors de la récupération du token:", error.message);
+      return null;
+    }
+
+    if (!data) {
+      console.error("❌ Aucun fichier trouvé.");
+      return null;
+    }
+
+    const tokenData = await data.text();
+    const tokenJSON = JSON.parse(tokenData);
+
+    if (!tokenJSON.access_token || !tokenJSON.refresh_token) {
+      console.error("❌ Token invalide dans le fichier !");
+      return null;
+    }
+
+    // Définir la session pour Supabase
+    const { error: sessionError } = await supabase.auth.setSession({
+      access_token: tokenJSON.access_token,
+      refresh_token: tokenJSON.refresh_token,
+    });
+
+    if (sessionError) {
+      console.error("❌ Erreur lors de la définition de la session :", sessionError.message);
+      return null;
+    }
+
+    console.log("✅ Session utilisateur établie !");
+    return tokenJSON.access_token;
+  } catch (error) {
+    console.error("❌ Erreur inattendue lors de la récupération du token:", error.message);
+    return null;
+  }
+};
+
 
 const scrapeLinkedInJobs = async () => {
+  console.log("🔎 Scraping en cours...");
+
   const browser = await chromium.launch({ headless: true });
   const page = await browser.newPage();
 
-  console.log("🔍 Chargement des offres LinkedIn...");
+  try {
+    await page.goto("https://www.linkedin.com/jobs/search/?keywords=Developpeur%20React", {
+      waitUntil: "domcontentloaded",
+    });
 
-  // Ouvre la page des offres d'emploi sur LinkedIn
-  await page.goto("https://www.linkedin.com/jobs/search/?keywords=Developpeur%20React", {
-    waitUntil: "networkidle",
-  });
+    await page.waitForTimeout(5000); // Attente pour chargement complet
 
-  // Attendre que la page charge les offres
-  await page.waitForTimeout(50000);
+    const pageHTML = await page.content();
+    // console.log("📄 Contenu de la page HTML :", pageHTML);
 
-  // Récupérer les offres d'emploi
-  const jobs = await page.evaluate(() => {
-    return Array.from(document.querySelectorAll(".job-search-card"))
-      .map(job => ({
-        title: job.querySelector(".job-search-card__title")?.innerText.trim() || "Titre inconnu",
-        company: job.querySelector(".job-search-card__company-name")?.innerText.trim() || "Entreprise inconnue",
-        location: job.querySelector(".job-search-card__location")?.innerText.trim() || "Localisation inconnue",
-        link: job.querySelector(".job-search-card__link")?.href || "#",
-      }))
-      .filter(job => job.title && job.company);
-  });
+    const jobListings = await page.evaluate(() => {
+      return Array.from(document.querySelectorAll(".base-search-card__title"))
+        .map((el) => el.innerText.trim());
+    });
 
-  console.log(`✅ ${jobs.length} offres trouvées`);
-
-  await browser.close();
-  return jobs;
+    console.log("📄 Jobs récupérés:", jobListings);
+    await browser.close();
+    return jobListings;
+  } catch (error) {
+    console.error("❌ Erreur pendant le scraping :", error.message);
+    await browser.close();
+    return [];
+  }
 };
 
-const saveJobsToSupabase = async (jobs) => {
-  // 🔑 Vérifier l'authentification de l'utilisateur
-  const { data: { user }, error: authError } = await supabase.auth.getUser();
-  
-  if (authError) {
-    console.error("❌ Erreur d'authentification:", authError.message);
-    return;
-  }
-  
-  if (!user || !user.id) {
-    console.error("❌ Aucun utilisateur authentifié");
-    return;
-  }
+async function saveJobsToSupabase(jobs) {
+  console.log("🔑 Utilisateur actuel :", supabase.auth.getUser());
 
-  console.log(`🔑 Utilisateur connecté: ${user.id}`);
+  try {
+    const { data: user, error: authError } = await supabase.auth.getUser();
 
-  for (const job of jobs) {
-    // Vérifier si l'offre existe déjà dans la base de données pour éviter les doublons
-    const { data, error: checkError } = await supabase
+    if (authError || !user?.user) {
+      console.error("❌ Erreur d'authentification:", authError?.message || "Utilisateur non connecté.");
+      return { success: false, error: authError };
+    }
+
+    console.log("✅ Utilisateur authentifié :", user.user);
+    const { data: session } = await supabase.auth.getSession();
+console.log("🔍 Session en cours :", session);
+
+
+    // Ajout de user_id dans chaque job
+    const jobRecords = jobs.map((job) => ({
+      title: job,
+      user_id: user.user.id, // Ajout du user_id obligatoire
+    }));
+
+    const { data, error } = await supabase
       .from("jobs")
-      .select("id")
-      .eq("title", job.title)
-      .eq("company", job.company);
+      .insert(jobRecords)
+      .select();
 
-    if (checkError) {
-      console.error(`❌ Erreur lors de la vérification de ${job.title}:`, checkError.message);
-      continue;
+    if (error) {
+      console.error("❌ Erreur lors de l’enregistrement :", error.message);
+      return { success: false, error };
     }
 
-    if (data.length === 0) {
-      // Insérer uniquement si l'offre n'existe pas
-      const { error } = await supabase
-        .from("jobs")
-        .insert([
-          {
-            title: job.title,
-            company: job.company,
-            location: job.location,
-            type: "CDI",
-            link: job.link,
-            user_id: user.id,  // ✅ Ajout du user_id
-          }
-        ]);
-
-      if (error) {
-        console.error(`❌ Erreur en insérant ${job.title}:`, error.message);
-      } else {
-        console.log(`✅ ${job.title} ajouté à Supabase`);
-      }
-    } else {
-      console.log(`⚠️ ${job.title} existe déjà dans Supabase`);
-    }
+    console.log("✅ Jobs enregistrés avec succès !", data);
+    return { success: true, data };
+  } catch (err) {
+    console.error("❌ Erreur inattendue :", err);
+    return { success: false, error: err };
   }
-};
+}
 
-// Exécuter le scraper
+
+
+
 (async () => {
+  console.log("🔑 Récupération du token depuis Supabase Storage...");
+  const token = await getSupabaseTokenFromStorage();
+
+  if (!token) {
+    console.error("❌ Impossible d'exécuter le script sans token.");
+    return;
+  }
+
+  console.log("🚀 Lancement du scraping...");
   const jobs = await scrapeLinkedInJobs();
-  await saveJobsToSupabase(jobs);
+
+  if (jobs.length > 0) {
+    console.log("📡 Enregistrement des jobs dans Supabase...");
+    await saveJobsToSupabase(jobs, token); // Décommente si tu veux enregistrer
+  } else {
+    console.log("⚠️ Aucune offre trouvée, vérifie la page LinkedIn.");
+  }
 })();
