@@ -18,31 +18,54 @@ function Register() {
     event.preventDefault();
     setMessage("");
     setErrors({});
-
+  
     if (!email || !password || !firstName || !lastName) {
       setMessage("Tous les champs doivent être remplis.");
       return;
     }
-
+  
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
+      options: {
+        data: {
+          firstName,
+          lastName,
+        },
+      },
     });
-
+  
     if (error) {
       toast.error(`❌ ${error.message}`, { position: "top-right", autoClose: 3000 });
       return;
     }
-
+  
     if (data) {
       toast.success('🎉 Inscription réussie ! Vérifiez votre email.', { position: 'top-right', autoClose: 3000 });
+  
+      // Insérer les infos dans la table `profiles` (si elle existe)
+      await supabase
+        .from("profiles")
+        .insert([
+          {
+            id: data.user.id, // Récupère l'ID utilisateur
+            first_name: firstName,
+            last_name: lastName,
+            email,
+          },
+        ])
+        .then(({ error }) => {
+          if (error) {
+            console.error("Erreur d'ajout dans profiles:", error);
+          }
+        });
     }
-
+  
     setEmail("");
     setPassword("");
     setFirstName("");
     setLastName("");
-  };
+  };  
 
   return (
     <div className="flex min-h-screen bg-gradient-to-b from-white to-[#f5f9ff] mt-10">
