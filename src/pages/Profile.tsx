@@ -9,7 +9,6 @@ const Profile = () => {
   const [certificates, setCertificates] = useState([]);
   const [projects, setProjects] = useState([]);
 
-  // États pour gérer l'affichage des modales
   const [showExperienceModal, setShowExperienceModal] = useState(false);
   const [showProjectModal, setShowProjectModal] = useState(false);
   const [showCertificateModal, setShowCertificateModal] = useState(false);
@@ -25,7 +24,6 @@ const Profile = () => {
     facebook: "",
   });
 
-  // États pour les formulaires
   const [experienceForm, setExperienceForm] = useState({
     title: "",
     company: "",
@@ -45,7 +43,6 @@ const Profile = () => {
     issue_date: "",
   });
 
-  // Récupérer l'utilisateur connecté
   useEffect(() => {
     const fetchUser = async () => {
       const { data, error } = await supabase.auth.getUser();
@@ -56,7 +53,6 @@ const Profile = () => {
       setUser(data?.user);
       setLoading(false);
 
-      // Récupérer les informations du profil après avoir défini l'utilisateur
       const { data: profileData, error: profileError } = await supabase
         .from("user_profiles")
         .select("*")
@@ -80,7 +76,6 @@ const Profile = () => {
     fetchUser();
   }, []);
 
-  // Récupérer les expériences, projets et certificats depuis Supabase
   useEffect(() => {
     if (user) {
       fetchExperiences();
@@ -128,7 +123,6 @@ const Profile = () => {
     }
   };
 
-  // Gestion des formulaires
   const handleExperienceSubmit = async (e) => {
     e.preventDefault();
     const { data, error } = await supabase
@@ -207,7 +201,6 @@ const Profile = () => {
     }
   };
 
-  // Statistiques du profil
   const profileStats = [
     { icon: <Briefcase />, label: "Expériences", value: experiences.length || "0" },
     { icon: <Award />, label: "Certificats", value: certificates.length || "0" },
@@ -216,21 +209,21 @@ const Profile = () => {
 
   return (
     <div className="min-h-screen bg-[#f5f9ff]">
-      <div className="pt-24 px-6">
+      <div className="pt-24 px-4 sm:px-6">
         <div className="max-w-7xl mx-auto">
           {loading ? (
             <p className="text-center text-gray-600">Chargement du profil...</p>
           ) : user ? (
             <>
               {/* Profile Header Card */}
-              <div className="bg-white rounded-xl shadow-md p-6 mb-8">
-                <div className="flex items-start justify-between">
+              <div className="bg-white rounded-xl shadow-md p-4 sm:p-6 mb-8">
+                <div className="flex flex-col sm:flex-row items-start justify-between">
                   <div className="flex items-center space-x-4">
-                    <div className="w-20 h-20 bg-[#007aed]/10 rounded-full flex items-center justify-center">
-                      <UserCircle className="h-12 w-12 text-[#007aed]" />
+                    <div className="w-16 h-16 sm:w-20 sm:h-20 bg-[#007aed]/10 rounded-full flex items-center justify-center">
+                      <UserCircle className="h-10 w-10 sm:h-12 sm:w-12 text-[#007aed]" />
                     </div>
                     <div>
-                      <h1 className="text-2xl font-bold text-gray-800">
+                      <h1 className="text-xl sm:text-2xl font-bold text-gray-800">
                         {user.user_metadata?.firstName || "Prénom"} {user.user_metadata?.lastName || "Nom"}
                       </h1>
                       <div className="flex items-center space-x-2 text-gray-600 mt-1">
@@ -245,7 +238,7 @@ const Profile = () => {
                       )}
                     </div>
                   </div>
-                  <div className="flex items-center space-x-4">
+                  <div className="flex flex-col sm:flex-row items-center space-y-2 sm:space-y-0 sm:space-x-4 mt-4 sm:mt-0">
                     <button
                       onClick={() => setShowEditProfileModal(true)}
                       className="bg-[#007aed] text-white px-4 py-2 rounded-lg hover:bg-[#0079ed] transition-colors flex items-center"
@@ -306,28 +299,28 @@ const Profile = () => {
               </div>
 
               {/* Stats Grid */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 mb-8">
                 {profileStats.map((stat, index) => (
-                  <div key={index} className="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow">
+                  <div key={index} className="bg-white p-4 sm:p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow">
                     <div className="flex items-center justify-between mb-4">
                       <div className="p-3 bg-[#007aed]/10 rounded-lg">
                         {React.cloneElement(stat.icon, { className: "h-6 w-6 text-[#007aed]" })}
                       </div>
                     </div>
-                    <h3 className="text-2xl font-bold text-gray-800">{stat.value}</h3>
+                    <h3 className="text-xl sm:text-2xl font-bold text-gray-800">{stat.value}</h3>
                     <p className="text-gray-600">{stat.label}</p>
                   </div>
                 ))}
               </div>
 
               {/* Main Content */}
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8">
                 {/* Experiences and Projects Column */}
-                <div className="lg:col-span-2 space-y-8">
+                <div className="lg:col-span-2 space-y-6 sm:space-y-8">
                   {/* Experiences Section */}
-                  <div className="bg-white rounded-xl shadow-md p-6">
-                    <div className="flex justify-between items-center mb-6">
-                      <h2 className="text-xl font-bold text-gray-800">Expériences professionnelles</h2>
+                  <div className="bg-white rounded-xl shadow-md p-4 sm:p-6">
+                    <div className="flex flex-col sm:flex-row justify-between items-center mb-4 sm:mb-6">
+                      <h2 className="text-xl font-bold text-gray-800 mb-2 sm:mb-0">Expériences professionnelles</h2>
                       <button
                         onClick={() => setShowExperienceModal(true)}
                         className="bg-[#ff7f04] text-white px-4 py-2 rounded-lg hover:bg-[#ff7f04]/90 transition-colors flex items-center"
@@ -360,9 +353,9 @@ const Profile = () => {
                   </div>
 
                   {/* Projects Section */}
-                  <div className="bg-white rounded-xl shadow-md p-6">
-                    <div className="flex justify-between items-center mb-6">
-                      <h2 className="text-xl font-bold text-gray-800">Projets réalisés</h2>
+                  <div className="bg-white rounded-xl shadow-md p-4 sm:p-6">
+                    <div className="flex flex-col sm:flex-row justify-between items-center mb-4 sm:mb-6">
+                      <h2 className="text-xl font-bold text-gray-800 mb-2 sm:mb-0">Projets réalisés</h2>
                       <button
                         onClick={() => setShowProjectModal(true)}
                         className="bg-[#ff7f04] text-white px-4 py-2 rounded-lg hover:bg-[#ff7f04]/90 transition-colors flex items-center"
@@ -395,11 +388,11 @@ const Profile = () => {
                 </div>
 
                 {/* Sidebar */}
-                <div className="space-y-8">
+                <div className="space-y-6 sm:space-y-8">
                   {/* Certificates Section */}
-                  <div className="bg-white rounded-xl shadow-md p-6">
-                    <div className="flex justify-between items-center mb-6">
-                      <h2 className="text-xl font-bold text-gray-800">Certificats</h2>
+                  <div className="bg-white rounded-xl shadow-md p-4 sm:p-6">
+                    <div className="flex flex-col sm:flex-row justify-between items-center mb-4 sm:mb-6">
+                      <h2 className="text-xl font-bold text-gray-800 mb-2 sm:mb-0">Certificats</h2>
                       <button
                         onClick={() => setShowCertificateModal(true)}
                         className="bg-[#ff7f04] text-white px-4 py-2 rounded-lg hover:bg-[#ff7f04]/90 transition-colors flex items-center"
@@ -430,8 +423,8 @@ const Profile = () => {
                   </div>
 
                   {/* Skills Section */}
-                  <div className="bg-white rounded-xl shadow-md p-6">
-                    <h2 className="text-xl font-bold text-gray-800 mb-6">Compétences</h2>
+                  <div className="bg-white rounded-xl shadow-md p-4 sm:p-6">
+                    <h2 className="text-xl font-bold text-gray-800 mb-4 sm:mb-6">Compétences</h2>
                     <div className="flex flex-wrap gap-2">
                       {['React', 'Node.js', 'Python', 'JavaScript', 'HTML/CSS'].map((skill, index) => (
                         <span key={index} className="bg-[#007aed]/10 text-[#007aed] px-3 py-1 rounded-full text-sm">
