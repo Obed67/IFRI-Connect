@@ -42,17 +42,17 @@ const Login = () => {
     if (error) {
       toast.error(`❌ ${error.message}`, { position: 'top-right', autoClose: 3000 });
     } else {
-      toast.success('🎉 Connexion réussie !', { position: 'top-right', autoClose: 1000 });
-      setTimeout(() => navigate('/dashboard'), 500);
+      toast.success('🎉 Connexion réussie !', { position: 'top-right', autoClose: 2000 });
+      setTimeout(() => navigate('/dashboard'), 3000);
     }
   };
 
   return (
-    <div className="flex min-h-screen bg-gradient-to-b from-gray-50 to-white">
+    <div className="flex min-h-screen bg-gradient-to-b from-gray-50 to-white mt-10">
       <ToastContainer />
       <div className="hidden lg:flex flex-1 flex-col justify-center items-center p-10">
         <div className="max-w-xl">
-          <h1 className="text-6xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-blue-800 mb-6">
+          <h1 className="text-6xl font-extrabold bg-clip-text  text-[#007aed] text-transparent bg-gradient-to-r from-blue-600 to-blue-800 mb-6">
             Bienvenue à nouveau !
           </h1>
           <p className="text-2xl text-gray-600 mb-8">
@@ -70,7 +70,7 @@ const Login = () => {
           <h2 className="text-3xl font-bold text-center text-gray-900 mb-8">Connexion</h2>
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="relative">
-              <Mail className="absolute left-3 top-3 text-gray-400" />
+              <Mail className="absolute left-3 top-3 text-[#007aed]" />
               <input
                 type="email"
                 name="email"
@@ -84,7 +84,7 @@ const Login = () => {
             </div>
 
             <div className="relative">
-              <Lock className="absolute left-3 top-3 text-gray-400" />
+              <Lock className="absolute left-3 top-3 text-[#007aed]" />
               <input
                 type="password"
                 name="password"
@@ -99,7 +99,7 @@ const Login = () => {
 
             <button
               type="submit"
-              className="w-full bg-blue-600 text-white px-8 py-4 rounded-xl font-semibold hover:bg-blue-700 transform hover:scale-105 transition duration-300"
+              className="w-full bg-[#0d7100] text-white px-8 py-4 rounded-xl font-semibold hover:bg-[#0d7100]/90 transform hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-[#0d7100]/20"
             >
               Se connecter
             </button>
