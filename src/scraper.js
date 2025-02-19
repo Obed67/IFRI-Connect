@@ -57,12 +57,26 @@ const scrapeLinkedInJobs = async () => {
 
     await page.waitForTimeout(5000); // Attente pour chargement complet
 
-    const pageHTML = await page.content();
-    // console.log("📄 Contenu de la page HTML :", pageHTML);
-
     const jobListings = await page.evaluate(() => {
-      return Array.from(document.querySelectorAll(".base-search-card__title"))
-        .map((el) => el.innerText.trim());
+      return Array.from(document.querySelectorAll(".job-search-card")).map((job) => {
+        const titleElement = job.querySelector(".base-search-card__title");
+        const companyElement = job.querySelector(".base-search-card__subtitle a");
+        const locationElement = job.querySelector(".job-search-card__location");
+        const linkElement = job.querySelector(".base-card__full-link");
+        const typeElement = job.querySelector(".job-result-card__employment-type"); // CDI, CDD, Stage...
+        const durationElement = job.querySelector(".job-result-card__duration"); // Ex : 6 mois
+        const dateElement = job.querySelector(".job-search-card__listdate"); // Date de publication
+
+        return {
+          title: titleElement ? titleElement.innerText.trim() : "Non spécifié",
+          company: companyElement ? companyElement.innerText.trim() : "Non spécifié",
+          location: locationElement ? locationElement.innerText.trim() : "Non spécifié",
+          type: typeElement ? typeElement.innerText.trim() : "Non spécifié",
+          duration: durationElement ? durationElement.innerText.trim() : "Non spécifié",
+          posted_date: dateElement ? dateElement.innerText.trim() : "Non spécifié",
+          link: linkElement ? linkElement.href : "Non disponible",
+        };
+      });
     });
 
     console.log("📄 Jobs récupérés:", jobListings);
@@ -75,26 +89,29 @@ const scrapeLinkedInJobs = async () => {
   }
 };
 
-async function saveJobsToSupabase(jobs) {
-  console.log("🔑 Utilisateur actuel :", supabase.auth.getUser());
 
+
+async function saveJobsToSupabase(jobs) {
   try {
     const { data: user, error: authError } = await supabase.auth.getUser();
 
-    if (authError || !user?.user) {
+    if (authError || !user) {
       console.error("❌ Erreur d'authentification:", authError?.message || "Utilisateur non connecté.");
       return { success: false, error: authError };
     }
 
-    console.log("✅ Utilisateur authentifié :", user.user);
-    const { data: session } = await supabase.auth.getSession();
-console.log("🔍 Session en cours :", session);
+    console.log("✅ Utilisateur authentifié :", user);
 
-
-    // Ajout de user_id dans chaque job
+    // Préparation des données pour l'insertion
     const jobRecords = jobs.map((job) => ({
-      title: job,
-      user_id: user.user.id, // Ajout du user_id obligatoire
+      title: job.title,           // ✅ Titre du poste
+      company: job.company,       // ✅ Nom de l'entreprise
+      location: job.location,     // ✅ Lieu de l'offre
+      type: job.type,             // ✅ Type de contrat (CDI, CDD, Stage...)
+      duration: job.duration,     // ✅ Durée de l'offre (si disponible)
+      posted_date: job.posted_date, // ✅ Date de publication
+      link: job.link,             // ✅ Lien vers l'offre
+      user_id: user.id            // ✅ ID de l'utilisateur
     }));
 
     const { data, error } = await supabase
@@ -114,7 +131,6 @@ console.log("🔍 Session en cours :", session);
     return { success: false, error: err };
   }
 }
-
 
 
 

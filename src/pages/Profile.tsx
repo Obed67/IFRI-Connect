@@ -96,29 +96,46 @@
 
 // export default Profile;
 
-import React from 'react';
-import { useEffect, useState } from 'react';
-import supabase from '../helper/supabaseClient';
+import React, { useEffect, useState } from "react";
+import supabase from "../helper/supabaseClient";
 
 const Profile = () => {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
     const fetchUser = async () => {
-      const { data: { user } } = await supabase.auth.getUser();
-      setUser(user);
+      const { data, error } = await supabase.auth.getUser();
+      if (error) {
+        console.error("Erreur lors de la récupération de l'utilisateur:", error.message);
+        return;
+      }
+      setUser(data?.user);
     };
 
     fetchUser();
   }, []);
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen">
-      {user ? (
-        <h1 className="text-3xl font-bold">Bienvenue, {user.user_metadata.firstName} {user.user_metadata.lastName}!</h1>
-      ) : (
-        <h1 className="text-3xl font-bold">Utilisateur non trouvé</h1>
-      )}
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-6">
+      <div className="bg-white shadow-lg rounded-lg p-6 w-full max-w-md text-center">
+        {user ? (
+          <>
+            <h1 className="text-2xl font-semibold text-gray-700">
+              👋 Bienvenue, {user.user_metadata?.firstName || "Prénom"} {user.user_metadata?.lastName || "Nom"} !
+            </h1>
+            <p className="text-gray-600 mt-2">Email: <span className="font-medium">{user.email}</span></p>
+            <p className="text-gray-600">ID Utilisateur: <span className="font-medium">{user.id}</span></p>
+            <p className="text-gray-600">Créé le: <span className="font-medium">{new Date(user.created_at).toLocaleDateString()}</span></p>
+
+            {/* Autres métadonnées si disponibles */}
+            {user.user_metadata?.phone && <p className="text-gray-600">Téléphone: <span className="font-medium">{user.user_metadata.phone}</span></p>}
+            {user.user_metadata?.role && <p className="text-gray-600">Rôle: <span className="font-medium">{user.user_metadata.role}</span></p>}
+
+          </>
+        ) : (
+          <h1 className="text-2xl font-bold text-red-500">Utilisateur non trouvé</h1>
+        )}
+      </div>
     </div>
   );
 };
