@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import supabase from "../supabase.js";
+import supabase from "./../helper/supabaseClient";
 import React from "react";
 
 const Jobs = () => {

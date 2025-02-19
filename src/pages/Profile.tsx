@@ -98,7 +98,7 @@
 
 import React from 'react';
 import { useEffect, useState } from 'react';
-import supabase from '../supabase'; // Import Supabase
+import supabase from '../helper/supabaseClient';
 
 const Profile = () => {
   const [user, setUser] = useState(null);
