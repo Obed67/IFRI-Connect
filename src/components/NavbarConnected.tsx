@@ -82,9 +82,8 @@ const NavbarConnected = () => {
                 </div>
                 <ChevronDown className="h-5 w-5 text-gray-600" />
               </button>
-
               {isDropdownOpen && (
-                <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg overflow-hidden z-50">
+                <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg z-50">
                   <Link to="/dashboard" onClick={handleNavigate} className="block px-4 py-2 text-gray-600 hover:bg-blue-50 hover:text-blue-600">
                     <LayoutDashboard className="h-5 w-5 inline mr-2" /> Tableau de bord
                   </Link>
@@ -108,6 +107,31 @@ const NavbarConnected = () => {
           </button>
         </div>
       </div>
+
+      {/* Menu Mobile */}
+      {isMenuOpen && (
+        <div className="md:hidden absolute top-16 left-0 w-full bg-white shadow-lg z-50 p-4 flex flex-col space-y-4">
+          {navLinks.map(({ to, label, icon }) => (
+            <Link key={to} to={to} className="text-gray-600 hover:text-blue-600 transition-colors duration-200" onClick={handleNavigate}>
+              {icon} {label}
+            </Link>
+          ))}
+          <hr />
+          <button onClick={() => setIsDropdownOpen(!isDropdownOpen)} className="flex items-center space-x-2">
+            <UserCircle className="h-8 w-8 text-[#007aed]" />
+            <span className="font-medium">{user?.email}</span>
+            <ChevronDown className="h-5 w-5 text-gray-600" />
+          </button>
+          {isDropdownOpen && (
+            <div className="flex flex-col space-y-2">
+              <Link to="/dashboard" onClick={handleNavigate} className="text-gray-600 hover:text-blue-600">Tableau de bord</Link>
+              <Link to="/profile" onClick={handleNavigate} className="text-gray-600 hover:text-blue-600">Mon profil</Link>
+              <Link to="/setting" onClick={handleNavigate} className="text-gray-600 hover:text-blue-600">Paramètres</Link>
+              <button onClick={signOut} className="text-red-600 hover:text-red-700">Déconnexion</button>
+            </div>
+          )}
+        </div>
+      )}
     </nav>
   );
 };
