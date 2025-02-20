@@ -1,6 +1,6 @@
-# IFRI Connect
+# StageBox
 
-IFRI Connect est une plateforme destinée aux étudiants de l'IFRI pour les aider à trouver des opportunités de stage et d'emploi, à se connecter avec des entreprises et à développer leur réseau professionnel.
+StageBox est une plateforme destinée aux étudiants de l'IFRI pour les aider à trouver des opportunités de stage et d'emploi, à se connecter avec des entreprises et à développer leur réseau professionnel.
 
 ## Structure du projet
 
