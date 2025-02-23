@@ -62,7 +62,7 @@ const NavbarConnected = () => {
             <div className="p-2 rounded-lg bg-white transform group-hover:rotate-12 transition-all duration-300">
               <GraduationCap className="h-6 w-6 text-blue-600" />
             </div>
-            <span className="font-bold text-xl text-blue-600">IFRI Connect</span>
+            <span className="font-bold text-xl text-blue-600">StageBox</span>
           </Link>
 
           {/* Liens Desktop */}
